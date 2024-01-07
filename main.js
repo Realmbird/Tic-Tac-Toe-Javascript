@@ -73,11 +73,12 @@ function gameBoard() {
     return {checkWin, getBoard, generateBoard, printBoard}
 }
 //set tile
-function setTitle(playerNum) {
+function setTile(playerNum, gameboard) {
     /*
     Gonna be like player (1) or player (2)
     Excepting Number
     */
+    const board = gameboard
     const player = playerNum
     //added symbol not var so it is still inside of function scope
     let symbol;
@@ -121,33 +122,58 @@ function Tile() {
     };
 }
 //closure on player
-function createPlayer(num) {
-    const playernum = num
-    //gives them the title player one or two to make it consistent
-    let title;
-    switch(player){
-        case 1:
-            title = "Player One"
-            break;
-        case 2:
-            title = "Player Two"
-            break;
-        default:
-            console.log("Number not valid");
-            title = "Player None"
-    }
-
-    return function Player(name){
-        const playername = name
-        return {title, playernum, playername, setTitle(playerNum)}
-    }
-    // Player {title, playernum, playername}
+//console only
+function Player(name, num, board) {
+    this.name = name
+    this.num = num
+    // return function AddPiece(row,col)
+    this.setTile = setTile(num, board)
 }
+
 
 function GameController() {
     const board = gameBoard()
-    const playertemplates = [createPlayer(1), createPlayer(2)]
-    const players = []
+    const players = [new Player("Player One", 1), new Player("Player Two", 2)]
+    
+    const start = () => {
+        //creates resets board
+        board.generateBoard()
+        //prints board
+        printNewRound()
+    }
+    
+    let activePlayer = players[0]
+
+    const switchPlayerTurn = () => {
+        //? is a if else if active player is 0 go to 1 if not go to 0
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+    };
+
+    const getActivePlayer = () => activePlayer;
+
+    
+    const printNewRound = () => {
+        board.printBoard();
+        console.log(`${getActivePlayer().name}'s turn.`);
+    };
+    const consoleInput = () => {
+        const row = prompt("Row")
+        const col = prompt("Col")
+        activePlayer.setTile(row, col)
+    }
+    const playRound = () => {
+        //console input
+        consoleInput()
+        //prints board
+        printNewRound()
+        switchPlayerTurn()
+    }
+    return {
+        playRound,
+        getActivePlayer,
+        start,
+        printNewRound
+    }
 
 }
 //Incharge of moving board results onto the DOM
