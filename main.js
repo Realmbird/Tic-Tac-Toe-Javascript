@@ -80,7 +80,7 @@ function gameBoard() {
     }
 
     const checkDiagonals = () => {
-        //works 
+        //works l
         //two unless statements
         //top left to bottom right
         if(((board[0][0].getValue() == board[1][1].getValue() && board[1][1].getValue() == board[2][2].getValue()) && board[0][0].filled())){
@@ -169,17 +169,19 @@ function GameController() {
 
         if(tie){
             console.log("Tie has occured")
-            end()
+            return true
         }
         win = board.checkWin()
         console.log(win)
         if(win){
             console.log(`${getActivePlayer().name} has won`)
-            end()
+            return true
         }
+        return false
     }
     const end = () => {
         board.debugWin()
+        return true
     }
     
     let activePlayer = players[0]
@@ -203,19 +205,34 @@ function GameController() {
         board.setTile(getActivePlayer().num, row, col)
         // removed changed to add settile to board not player activePlayer.setTile(row, col)
     }
+    const playGame = () => {
+        let ended = false
+        do {
+            playRound()
+            //checks if game won
+            ended = checkend()
+            /*
+            check var ended
+            console.log(`ended ${ended}`)
+            console.log(`condition ${!ended}`)
+            */
+        } while(!ended);
+        console.log("Game Ended")
+    }
     const playRound = () => {
         //console input
         consoleInput()
         //prints board
         printNewRound()
-        checkend()
+        //goes to other player
         switchPlayerTurn()
     }
     return {
         playRound,
         getActivePlayer,
         start,
-        printNewRound
+        printNewRound,
+        playGame
     }
 
 }
