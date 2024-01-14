@@ -1,4 +1,4 @@
-function gameBoard() {
+const gameBoard = (() => {
     //make factory or return a board
 
     const rows = 3;
@@ -28,8 +28,15 @@ function gameBoard() {
         private variable symbol is set
         Closure is used so function just needs coordinates (row,col)
         */
-        board[row][col].addToken(symbol)
-        
+      
+        if(board[row][col].filled()){
+            console.log("Error Tile already filled")
+            console.log(`Tile at row ${row}, col ${col} is already filled with:`, board[row][col].getValue());
+            return true
+        }else {
+            board[row][col].addToken(symbol)
+            return false
+        }
     }
     const generateBoard = () => {
         /*
@@ -110,6 +117,11 @@ function gameBoard() {
         }
         return true
     }
+    //getting values in board
+    const getValues = () => {
+        const boardWithValues = board.map((row) => row.map((tile) => tile.getValue()))
+        return boardWithValues
+    }
     const printBoard = () => {
         const boardWithValues = board.map((row) => row.map((tile) => tile.getValue()))
         console.log(boardWithValues);
@@ -123,8 +135,8 @@ function gameBoard() {
         console.log(boardWithValues);
     }
     //factory game board object
-    return {checkWin, getBoard, generateBoard, printBoard, setTile, checkTie, debugWin}
-}
+    return {checkWin, getBoard, generateBoard, printBoard, setTile, checkTie, debugWin, getValues}
+})()
 function Tile() {
     let value = "";
      // Accept a player's token to change the value of the cell
@@ -154,24 +166,34 @@ function Player(name, num) {
 }
 
 
-function GameController() {
-    const board = gameBoard()
+const GameController = (() => {
+    //const board = gameBoard()
     const players = [new Player("Player One", 1), new Player("Player Two", 2)]
     
-    const start = () => {
+    //debug only
+    const gameSetup = () => {
         //creates resets board
-        board.generateBoard()
+        gameBoard.generateBoard()
         //prints board
         printNewRound()
+        //console.log("works")
+    }
+    const start = () => {
+        //creates resets board
+        gameBoard.generateBoard()
+        //prints board
+        printNewRound()
+        //Start game
+        playGame()
     }
     const checkend = () => {
-        tie = board.checkTie()
+        tie = gameBoard.checkTie()
 
         if(tie){
             console.log("Tie has occured")
             return true
         }
-        win = board.checkWin()
+        win = gameBoard.checkWin()
         console.log(win)
         if(win){
             console.log(`${getActivePlayer().name} has won`)
@@ -179,31 +201,70 @@ function GameController() {
         }
         return false
     }
+    //end code
     const end = () => {
-        board.debugWin()
-        return true
+        gameBoard.debugWin()
     }
     
     let activePlayer = players[0]
 
     const switchPlayerTurn = () => {
         //? is a if else if active player is 0 go to 1 if not go to 0
+        //console.log(activePlayer)
+        console.log("switch")
+        
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
+        //console.log(activePlayer)
     };
 
     const getActivePlayer = () => activePlayer;
 
     
     const printNewRound = () => {
-        board.printBoard();
+        gameBoard.printBoard();
         console.log(`${getActivePlayer().name}'s turn.`);
     };
     const consoleInput = () => {
-        const row = prompt("Row")
-        const col = prompt("Col")
-        //setTile = (playerNum, row, col) 
-        board.setTile(getActivePlayer().num, row, col)
+        let row, col, error;
+        do {
+            row = parseInt(prompt("Row"), 10);
+            col = parseInt(prompt("Col"), 10);
+            const isValidRow = row >= 0 && row < 3;
+            const isValidCol = col >= 0 && col < 3;
+            
+            if (isValidRow && isValidCol) {
+                error = gameBoard.setTile(getActivePlayer().num, row, col);
+            } else {
+                console.log("Invalid input. Please enter row and column numbers between 0 and 2.");
+                error = true;
+            }
+        } while(error);
         // removed changed to add settile to board not player activePlayer.setTile(row, col)
+    }
+    const domInput = (number) => {
+        // float removes .
+        let ended = false
+        if(ended){
+
+        }else{
+            const row = Math.floor(number / 3);
+            const col = number % 3;
+            /*
+            row and col work from i
+            console.log(row)
+            console.log(col)
+            */
+            gameBoard.setTile(getActivePlayer().num, row, col)
+            /*prints board
+            printNewRound()
+            */
+            printNewRound()
+            //goes to other player
+            switchPlayerTurn()
+
+            ended = checkend()
+        }
+        
     }
     const playGame = () => {
         let ended = false
@@ -232,12 +293,43 @@ function GameController() {
         getActivePlayer,
         start,
         printNewRound,
-        playGame
+        playGame,
+        gameSetup,
+        domInput
     }
 
-}
+})()
 //Incharge of moving board results onto the DOM
-function displayController() {
-    
-}
+const displayController = (() => {
+    const reload = () => {
+        const board = gameBoard.getValues()
+        const grid = document.querySelector(".grid")
+        grid.innerHTML = ""
+        //For each so that each board value gets added to DOM
+        let i = 0;
+        board.forEach((row) => row.forEach((item) => {
+            const section = document.createElement('div')
+            const button = document.createElement('button')
+            button.classList.add('tile');
+            button.setAttribute('id', i);
+            button.textContent = item
+            section.appendChild(button);
+            grid.appendChild(section)
+            i++
+        }))
+        grid.addEventListener('click', (event) => {
+            console.log(event.target)
+            GameController.domInput(event.target.id)
+            reload()
+        }     )
+
+
+          
+
+    }
+   return {reload}
+})()
+
+GameController.gameSetup()
+displayController.reload()
 
