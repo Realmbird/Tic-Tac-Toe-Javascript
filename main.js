@@ -248,6 +248,7 @@ const GameController = (() => {
         if(ended){
 
         }else{
+            
             const row = Math.floor(number / 3);
             const col = number % 3;
             /*
@@ -255,15 +256,18 @@ const GameController = (() => {
             console.log(row)
             console.log(col)
             */
-            gameBoard.setTile(getActivePlayer().num, row, col)
-            /*prints board
-            printNewRound()
-            */
-            printNewRound()
-            //goes to other player
-            switchPlayerTurn()
-
-            ended = checkend()
+            error = gameBoard.setTile(getActivePlayer().num, row, col)
+            if(!error){
+                 /*prints board
+                printNewRound()
+                */
+                printNewRound()
+                ended = checkend()
+                //goes to other player
+                switchPlayerTurn()
+            }else {
+                console.log("error")
+            }
         }
         
     }
@@ -302,6 +306,7 @@ const GameController = (() => {
 })()
 //Incharge of moving board results onto the DOM
 const displayController = (() => {
+    //outside to prevent the creation of multiple event listeners
     const grid = document.querySelector(".grid")
     grid.addEventListener('click', (event) => {
         //console.log(event.target)
