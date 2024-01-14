@@ -126,8 +126,8 @@ const gameBoard = (() => {
         const boardWithValues = board.map((row) => row.map((tile) => tile.getValue()))
         console.log(boardWithValues);
         
-        console.log("Debug:")
-        debugBoard()
+        //console.log("Debug:")
+        //debugBoard()
     }
     // debug to fix win code not working
     const debugBoard = () => {
@@ -194,7 +194,8 @@ const GameController = (() => {
             return true
         }
         win = gameBoard.checkWin()
-        console.log(win)
+        //win works properly checked
+        //console.log(win)
         if(win){
             console.log(`${getActivePlayer().name} has won`)
             return true
@@ -301,9 +302,15 @@ const GameController = (() => {
 })()
 //Incharge of moving board results onto the DOM
 const displayController = (() => {
+    const grid = document.querySelector(".grid")
+    grid.addEventListener('click', (event) => {
+        //console.log(event.target)
+        GameController.domInput(event.target.id)
+        reload()
+    }     )
+
     const reload = () => {
         const board = gameBoard.getValues()
-        const grid = document.querySelector(".grid")
         grid.innerHTML = ""
         //For each so that each board value gets added to DOM
         let i = 0;
@@ -317,15 +324,6 @@ const displayController = (() => {
             grid.appendChild(section)
             i++
         }))
-        grid.addEventListener('click', (event) => {
-            console.log(event.target)
-            GameController.domInput(event.target.id)
-            reload()
-        }     )
-
-
-          
-
     }
    return {reload}
 })()
