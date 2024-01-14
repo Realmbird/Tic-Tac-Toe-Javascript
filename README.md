@@ -6,7 +6,7 @@ A bird themed Tic Tac Toe game which uses ruby and was used to practice factory 
 Images
 Cockatoo: https://www.flaticon.com/free-icon/cockatoo_1596833
 Crows: https://www.flaticon.com/free-icon/crow_1224008
-#Demo
+# Demo
 
 # Technologies
 <ol>
