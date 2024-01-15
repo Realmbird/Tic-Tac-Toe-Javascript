@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 ## About
-A bird themed Tic Tac Toe game which uses ruby and was used to practice factory constructors and module pattern.
+A bird themed Tic Tac Toe game which uses javascript and was used to practice factory constructors and module pattern.
 
 ## Credit
 Images
