@@ -158,7 +158,7 @@ function Tile() {
 }
 //closure on player
 //console only
-function Player(name, num) {
+function Player(name, num, url) {
     this.name = name
     this.num = num
     this.setName = function(newName) {
@@ -313,7 +313,7 @@ const GameController = (() => {
         playGame,
         gameSetup,
         domInput,
-        setPlayerName 
+        setPlayerName
     }
 
 })()
@@ -337,9 +337,25 @@ const displayController = (() => {
             const button = document.createElement('button')
             button.classList.add('tile');
             button.setAttribute('id', i);
-            button.textContent = item
+            const textContent = item
+            
+            //item is x or o
+
+            
             section.appendChild(button);
             grid.appendChild(section)
+
+            switch(textContent){
+                case 'x':
+                    button.innerHTML = `<img src="images/cockatoo.png" alt="cockatoo">`
+                    break;
+                case 'o':
+                    button.innerHTML = `<img src="images/crow.png" alt="crow">`
+                    break;
+                default:
+                    
+            }
+
             i++
         }))
     }
