@@ -130,3 +130,9 @@ img {
     grid-area: credit;
     background-color: var(--green);
 }
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+}
