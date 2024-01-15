@@ -28,11 +28,35 @@
             <img src="images/crow.png" alt="crow">
         </div>
     </div>
-    
-    
-    <div class="settings">
-
+    <div class="lower">
+        <div class="settings">
+            <div id="setting-one" class = "set-name">
+                <form action = "https://httpbin.org/post" method="post">
+                    <label for="first_name">Player One Name:</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Player One">
+                </form>
+            </div>
+            <div id="setting-game">
+                <button id = "start">Start</button>
+                <button id = "reset">Reset</button>
+                <!-- Shows Game Winner -->
+                <dialog>
+                    <button autofocus>Close</button>
+                    <p>This modal dialog has a groovy backdrop!</p>
+                  </dialog>
+            </div>
+            <div id="setting-two"  class = "set-name">
+                <form action = "https://httpbin.org/post" method="post">
+                    <label for="two_name">Player Two Name:</label>
+                    <input type="text" id="two_name" name="two_name" placeholder="Player Two">
+                </form>
+            </div>
+        </div>
+        <div class="credit">
+            
+        </div>
     </div>
-    <div class="credit"></div>
+    
+   
 </body>
 </html>

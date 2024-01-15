@@ -161,6 +161,9 @@ function Tile() {
 function Player(name, num) {
     this.name = name
     this.num = num
+    this.setName = function(newName) {
+        this.name = newName
+    }
     // return function AddPiece(row,col)
     //this.setTile = setTile(num, board)
 }
@@ -198,6 +201,10 @@ const GameController = (() => {
         //console.log(win)
         if(win){
             console.log(`${getActivePlayer().name} has won`)
+            const dialog = document.querySelector("dialog");
+            const dialogText = document.querySelector("dialog p")
+            dialogText.textContent = `${getActivePlayer().name} has won`
+            dialog.showModal();
             return true
         }
         return false
@@ -293,6 +300,11 @@ const GameController = (() => {
         //goes to other player
         switchPlayerTurn()
     }
+    const setPlayerName = (index,name) => {
+        player = players[index] 
+        player.setName(name)
+        console.log(player.name)
+    }
     return {
         playRound,
         getActivePlayer,
@@ -300,7 +312,8 @@ const GameController = (() => {
         printNewRound,
         playGame,
         gameSetup,
-        domInput
+        domInput,
+        setPlayerName 
     }
 
 })()
@@ -330,6 +343,53 @@ const displayController = (() => {
             i++
         }))
     }
+
+    //event listners for name change
+    // Select the input elements
+    const firstNameInput = document.querySelector('#first_name');
+    const secondNameInput = document.querySelector('#two_name');
+
+    // Add an event listener for the 'input' event to the first player's name input
+    firstNameInput.addEventListener('input', (event) => {
+        GameController.setPlayerName(0,event.target.value);
+        let playerOneName = event.target.value
+        console.log('Player One Name:', playerOneName); // for demonstration
+    });
+
+    // Add an event listener for the 'input' event to the second player's name input
+    secondNameInput.addEventListener('input', (event) => {
+        GameController.setPlayerName(1,event.target.value);
+        let playerTwoName = event.target.value
+        console.log('Player Two Name:', playerTwoName); // for demonstration
+    });
+
+    //reset
+    const startBut = document.querySelector('#start');
+    const resetBut = document.querySelector('#reset');
+
+    startBut.addEventListener("click", (event) => {
+        reset()
+    })
+    resetBut.addEventListener("click", (event) => {
+       reset() 
+    })
+    const reset = () => {
+        GameController.gameSetup()
+        displayController.reload()
+    }
+
+    /*
+    dialog and modal
+    Shows results of the game
+    */
+    const dialog = document.querySelector("dialog");
+    const closeButton = document.querySelector("dialog button");
+
+    // "Close" button closes the dialog
+    closeButton.addEventListener("click", () => {
+        dialog.close();
+    });
+
    return {reload}
 })()
 
